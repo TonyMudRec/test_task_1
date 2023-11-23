@@ -1,0 +1,15 @@
+DROP TABLE IF EXISTS sku_group CASCADE;
+DROP TABLE IF EXISTS position_card CASCADE;
+
+CREATE TABLE sku_group (
+    groupId VARCHAR(200) UNIQUE NOT NULL,
+    parentId VARCHAR(200),
+    name VARCHAR(200) NOT NULL
+);
+
+CREATE TABLE position_card (
+    id VARCHAR(200) PRIMARY KEY,
+    isShowInApp BOOLEAN DEFAULT FALSE,
+    name VARCHAR(200),
+    groupId VARCHAR(200) REFERENCES sku_group(groupId) NOT NULL
+);
