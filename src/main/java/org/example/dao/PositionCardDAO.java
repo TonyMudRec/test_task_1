@@ -16,9 +16,11 @@ public class PositionCardDAO extends BaseDAO {
     }
 
     public Optional<String> getName(Long groupId) throws SQLException {
-        String sql = "SELECT pc.name " +
-                "FROM position_card pc " +
-                "WHERE pc.groupId = ?";
+        String sql = """
+                SELECT pc.name
+                FROM position_card pc
+                WHERE pc.groupId = ?
+                """;
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setLong(1, groupId);
             ResultSet resultSet = stmt.executeQuery();
