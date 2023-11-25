@@ -8,11 +8,11 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class SkuGroup {
-    Long groupId;
-    Long parentId;
+    String groupId;
+    String parentId;
     String name;
 
-    public SkuGroup(Long groupId, String name) {
+    public SkuGroup(String groupId, String name) {
         this.groupId = groupId;
         this.name = name;
     }

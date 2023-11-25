@@ -2,10 +2,9 @@ package org.example.dao;
 
 import org.example.model.SkuGroup;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+
+import static org.example.App.logger;
 
 public class SkuGroupDAO {
     private Connection connection;
@@ -14,26 +13,22 @@ public class SkuGroupDAO {
         connection = conn;
     }
 
-    public String getCardName(Long groupId) throws SQLException {
+    public String getCardName(String groupId) throws SQLException {
         String sql = """
-                SELECT pc.name
-                FROM (WITH RECURSIVE cte AS (
-                    SELECT groupId, parentId, name
-                    FROM sku_group
+                WITH RECURSIVE tmp AS(
+                    SELECT groupId, parentId FROM sku_group
                     WHERE groupId = ?
                     
-                    UNION ALL
+                    UNION
                     
-                    SELECT sg.groupId, sg.parentId, sg.name
-                    FROM sku_group sg
-                    JOIN cte c ON c.groupId = sg.parentId
-                ))
-                JOIN position_card pc ON c.groupId = pc.groupId
-                WHERE pc.groupId <> 0
-                LIMIT 1
+                    SELECT sg.groupId, sg.parentId FROM sku_group sg
+                    JOIN tmp t ON sg.groupId = t.parentId
+                ) SELECT pc.name FROM tmp
+                JOIN position_card pc ON pc.groupId = tmp.groupId
+                WHERE pc.name IS NOT NULL
                 """;
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setLong(1, groupId);
+            stmt.setString(1, groupId);
             ResultSet resultSet = stmt.executeQuery();
             if (resultSet.next()) {
                 return resultSet.getString("name");
@@ -42,14 +37,18 @@ public class SkuGroupDAO {
         return null;
     }
 
-    public boolean save(SkuGroup group) throws SQLException {
+    public void save(SkuGroup group) throws SQLException {
         String sql = "INSERT INTO sku_group VALUES (?, ?, ?)";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setLong(1, group.getGroupId());
-            stmt.setLong(2, group.getParentId());
-            stmt.setString(3, group.getName());
-            stmt.executeUpdate();
-            return true;
-        }
+            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+                stmt.setString(1, group.getGroupId());
+                if (group.getParentId() == null) {
+                    stmt.setNull(2, Types.VARCHAR);
+                } else {
+                    stmt.setString(2, group.getParentId());
+                }
+                stmt.setString(3, group.getName());
+                stmt.executeUpdate();
+            }
+        logger.info("The entity " + group.getName() + " was successfully saved");
     }
 }

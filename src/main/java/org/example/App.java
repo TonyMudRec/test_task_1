@@ -37,7 +37,7 @@ public class App {
         String sql = Files.lines(file.toPath())
                 .collect(Collectors.joining("\n"));
 
-        logger.info("Trying to connecting database");
+        logger.info("Trying to connect database");
 
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
@@ -66,8 +66,7 @@ public class App {
         String jdbc = String.format("jdbc:postgresql://localhost:%s/%s?user=%s&password=%s"
                 , dbPort, dbName, userName, userPassword);
         hikariConfig.setJdbcUrl(jdbc);
-        HikariDataSource dataSource = new HikariDataSource(hikariConfig);
-        return dataSource;
+        return new HikariDataSource(hikariConfig);
     }
 
 }

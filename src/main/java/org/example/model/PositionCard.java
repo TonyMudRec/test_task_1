@@ -8,12 +8,13 @@ import lombok.Setter;
 @Getter
 @AllArgsConstructor
 public class PositionCard {
-    Long id;// VARCHAR(200) PRIMARY KEY,
-    boolean isShowInApp;// BOOLEAN DEFAULT FALSE,
-    String name;// VARCHAR(200),
-    Long groupId;// VARCHAR(200) REFERENCES sku_group(groupId) NOT NULL
+    String id;
+    boolean isShowInApp;
+    String name;
+    String groupId;
 
-    public PositionCard(String name, Long groupId) {
+    public PositionCard(String id, String name, String groupId) {
+        this.id = id;
         this.isShowInApp = false;
         this.name = name;
         this.groupId = groupId;
