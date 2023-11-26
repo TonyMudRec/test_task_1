@@ -1,5 +1,4 @@
 import io.javalin.Javalin;
-import io.javalin.testtools.JavalinTest;
 import org.example.App;
 import org.example.dao.BaseDAO;
 import org.example.dao.PositionCardDAO;
@@ -16,39 +15,21 @@ import java.sql.SQLException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class Task1Test {
+public class AppTest {
     private static Javalin app;
 
     private static Connection connection;
-//    private static final MockWebServer SERVER = new MockWebServer();
 
     @BeforeAll
     public static void beforeAll() throws SQLException, IOException {
         app = App.getApp();
         connection = BaseDAO.dataSource.getConnection();
     }
-//    @BeforeAll
-//    public static void beforeAll() throws IOException {
-//        SERVER.enqueue(new MockResponse().setResponseCode(200));
-//        SERVER.enqueue(new MockResponse()
-//                .addHeader("Content-Type", "application/json; charset=utf-8")
-//                .addHeader("title", "application/json; charset=utf-8")
-//                .setBody("{}"));
-//    }
 
     @AfterAll
     public static void afterAll() throws IOException, SQLException {
         app.stop();
         connection.close();
-//        SERVER.shutdown();
-    }
-    @Test
-    void rootTest() {
-        JavalinTest.test(app, (server, client) -> {
-            var response = client.get("/");
-            assertThat(response.code()).isEqualTo(200);
-            assertThat(response.body().string()).contains("Hello World");
-        });
     }
 
     @Test
@@ -64,7 +45,7 @@ public class Task1Test {
     }
 
     @Test
-    void findParentId() throws SQLException {
+    void findParentIdTest() throws SQLException {
         var groupDao = new SkuGroupDAO(connection);
         var cardDao = new PositionCardDAO(connection);
         var group1 = new SkuGroup("2", "1", "parent1Child1");

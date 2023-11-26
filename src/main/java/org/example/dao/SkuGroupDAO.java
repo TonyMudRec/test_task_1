@@ -7,6 +7,10 @@ import java.sql.*;
 import static org.example.App.logger;
 
 public class SkuGroupDAO {
+
+    // TODO: 23.11.2023 Реализовать функцию DAO для получения имени (positionCard.name) карточки товара по его группе,
+    //  groupId - параметр функции. Если у группы не задана карточка товара, то тогда у этого товара карточка ее родителя, и т.д.
+    //  Если карточка не задана ни у кого, то вернуть null. Реализовать за 1 sql запрос.
     private Connection connection;
 
     public SkuGroupDAO(Connection conn) {
